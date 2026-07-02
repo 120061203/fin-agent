@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p /Users/songlin.chen/Documents/fin-agent/backend/app/api)",
+      "Bash(mkdir -p /Users/songlin.chen/Documents/fin-agent/backend/app/services)",
+      "Bash(mkdir -p /Users/songlin.chen/Documents/fin-agent/backend/app/models)",
+      "Bash(mkdir -p /Users/songlin.chen/Documents/fin-agent/backend/tests)",
+      "Bash(mkdir -p /Users/songlin.chen/Documents/fin-agent/frontend/src/components)"
+    ]
+  }
+}
