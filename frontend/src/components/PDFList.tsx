@@ -59,10 +59,10 @@ export function PDFList({ pdfs, selectedIds, onSelectionChange }: Props) {
               <input
                 type="checkbox"
                 checked={isSelected}
-                readOnly
                 disabled={isDisabled}
-                style={{ marginRight: 12, width: 16, height: 16 }}
+                onChange={() => !isDisabled && toggle(pdf.pdf_id)}
                 onClick={(e) => e.stopPropagation()}
+                style={{ marginRight: 12, width: 16, height: 16, cursor: isDisabled ? "not-allowed" : "pointer" }}
               />
               <div style={{ flex: 1 }}>
                 <div style={{ fontWeight: 600, color: "#2d3748" }}>{pdf.filename}</div>

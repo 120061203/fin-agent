@@ -12,7 +12,7 @@ from app.services import pdf_extractor, ocr_service, chunker, indexer
 
 router = APIRouter(prefix="/api/sessions", tags=["pdfs"])
 
-MAX_FILE_SIZE = 100 * 1024 * 1024
+MAX_FILE_SIZE = 500 * 1024 * 1024  # 500MB
 MAX_PDFS_PER_SESSION = 10
 
 
@@ -53,7 +53,7 @@ async def upload_pdf(session_id: str, file: UploadFile = File(...)):
 
     content = await file.read()
     if len(content) > MAX_FILE_SIZE:
-        raise HTTPException(status_code=413, detail="File size exceeds 100MB limit")
+        raise HTTPException(status_code=413, detail="File size exceeds 500MB limit")
 
     pdf_id = str(uuid.uuid4())
     file_path = os.path.join(session.upload_dir, f"{pdf_id}.pdf")

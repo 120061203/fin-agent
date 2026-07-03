@@ -31,21 +31,32 @@ export async function deleteSession(sessionId: string): Promise<void> {
   await fetch(`${BASE}/sessions/${sessionId}`, { method: "DELETE" });
 }
 
-export async function uploadPDF(
+export function uploadPDF(
   sessionId: string,
-  file: File
+  file: File,
+  onProgress?: (percent: number) => void
 ): Promise<{ pdf_id: string; filename: string; status: string }> {
-  const form = new FormData();
-  form.append("file", file);
-  const res = await fetch(`${BASE}/sessions/${sessionId}/pdfs`, {
-    method: "POST",
-    body: form,
+  return new Promise((resolve, reject) => {
+    const form = new FormData();
+    form.append("file", file);
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", `${BASE}/sessions/${sessionId}/pdfs`);
+    if (onProgress) {
+      xhr.upload.onprogress = (e) => {
+        if (e.lengthComputable) onProgress(Math.round((e.loaded / e.total) * 100));
+      };
+    }
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        resolve(JSON.parse(xhr.responseText));
+      } else {
+        const err = JSON.parse(xhr.responseText || "{}");
+        reject(new Error(err.detail || "Upload failed"));
+      }
+    };
+    xhr.onerror = () => reject(new Error("Upload failed"));
+    xhr.send(form);
   });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({ detail: "Upload failed" }));
-    throw new Error(err.detail || "Upload failed");
-  }
-  return res.json();
 }
 
 export async function listPDFs(sessionId: string): Promise<{ pdfs: PDFInfo[] }> {
